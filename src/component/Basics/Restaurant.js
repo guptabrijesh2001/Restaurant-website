@@ -2,22 +2,31 @@ import React, { useState } from 'react'
 import "./style.css"
 import Menu from "./menueApi.js"
 import MenuCard from "./MenuCard"
+import Navbar from "./Navbar"
+const uniquelist= [
+  ...new Set(Menu.map((curElem)=>{               //here []is used to turn unique elements into an array
+  return curElem.category;
+})),"All"]
+console.log(uniquelist);
 const Restaurant = () => {
-  const [menuData]=useState(Menu);   //should be added on first line in functional component
+  const [menuData,setmenudata]=useState(Menu);   //should be added on first line in functional component
+  const [menulist,setmenulist]=useState(uniquelist);
+  
+  const filteritem=(categoryofitem)=>{
+    if (categoryofitem==="All"){
+      return setmenudata(Menu);
+    }
+        const updatedlist=Menu.filter((curElem)=>{
+          return curElem.category===categoryofitem  ;            //return that current element whose category is equal to the passed parameter(category of item)
+        })
+        setmenudata(updatedlist)
+  }
   return (
     <>
-    <nav className="navbar">
-      <div className="btn-group">
-        <button className="btn-group__items">Breakfast</button>
-        <button className="btn-group__items">Lunch</button>
-        <button className="btn-group__items">Evening</button>
-        <button className="btn-group__items">Dinner</button>
-        <button className="btn-group__items">All</button>
-      </div>
-     </nav>
-     <MenuCard menuData={menuData}/> 
+    <Navbar Filteritem={filteritem} menulist={menulist}/>
+    <MenuCard menuData={menuData}/> 
     </>
   )
 }
 
-export default Restaurant
+export default Restaurant  
